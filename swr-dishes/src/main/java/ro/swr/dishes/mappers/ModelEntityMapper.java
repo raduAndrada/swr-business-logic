@@ -111,17 +111,16 @@ public record ModelEntityMapper<M, E>(Class<M> modelClass, Class<E> entityClass)
     private void setModelField(E src, M dst, Field srcField) {
         String value;
         try {
-            DatabaseJsonObject annotation = srcField.getAnnotation(DatabaseJsonObject.class);
-            Class dstClass = Class.forName(annotation.type());
             value = (String) srcField.get(src);
             if (StringUtils.isNotBlank(value)) {
+                Field dstField = modelClass.getDeclaredField(srcField.getName());
+                Class dstClass = dstField.getType();
                 Object json = gson.fromJson(value, dstClass);
 
-                Field dstField = modelClass.getDeclaredField(srcField.getName());
                 dstField.setAccessible(true);
                 dstField.set(dst, dstClass.cast(json));
             }
-        } catch (IllegalAccessException | NoSuchFieldException | ClassNotFoundException e) {
+        } catch (IllegalAccessException | NoSuchFieldException  e) {
             log.error("Couldn't convert to model, entity: {}", src, e);
         }
     }
