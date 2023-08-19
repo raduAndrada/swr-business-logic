@@ -1,0 +1,10 @@
+[
+  {
+    "shortName": "ingredientShortName",
+    "longName": "ingredientLongName",
+    "description": "ingredientDescription",
+    "quantity": 1.0,
+    "um": "g",
+    "recipeName": "testRecipe"
+  }
+]

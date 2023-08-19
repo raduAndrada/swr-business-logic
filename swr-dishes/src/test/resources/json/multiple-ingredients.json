@@ -1,0 +1,34 @@
+[
+  {
+    "shortName": "ingredientShortName1",
+    "longName": "ingredientLongName1",
+    "description": "ingredientDescription1",
+    "quantity": 1.0,
+    "um": "g",
+    "recipeName": "testRecipe"
+  },
+  {
+    "shortName": "ingredientShortName2",
+    "longName": "ingredientLongName2",
+    "description": "ingredientDescription2",
+    "quantity": 2.0,
+    "um": "g",
+    "recipeName": "testRecipe"
+  },
+  {
+    "shortName": "ingredientShortName3",
+    "longName": "ingredientLongName3",
+    "description": "ingredientDescription3",
+    "quantity": 3.0,
+    "um": "piece",
+    "recipeName": "testRecipe"
+  },
+  {
+    "shortName": "ingredientShortName4",
+    "longName": "ingredientLongName4",
+    "description": "ingredientDescription4",
+    "quantity": 4.0,
+    "um": "piece",
+    "recipeName": "testRecipe"
+  }
+]
