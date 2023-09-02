@@ -6,37 +6,34 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.sql.Date;
 import java.time.Instant;
 
+@Entity(name = "TABLES")
 @Data
-@Entity(name = "INGREDIENTS")
-@AllArgsConstructor
 @NoArgsConstructor
-public class IngredientEntity {
+@AllArgsConstructor
+@Builder
+public class TableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Expose
-    private String shortName;
+    private Integer spots;
 
     @Expose
-    private String longName;
+    private Integer tableNumber;
 
     @Expose
-    private String description;
-
-    @Expose
-    private Double quantity;
-
-    @Expose
-    private String um;
+    private Boolean isFree;
 
     @CreationTimestamp
     private Instant creationDate;
@@ -44,7 +41,5 @@ public class IngredientEntity {
     @UpdateTimestamp
     private Instant lastUpdate;
 
-    @Expose
-    private String recipeName;
 
 }

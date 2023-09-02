@@ -1,6 +1,5 @@
 package ro.swr.dishes.repository;
 
-import model.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
@@ -22,8 +21,6 @@ public interface DishRepository extends PagingAndSortingRepository<DishEntity, L
     List<DishEntity> findAllByPriceIsBetween(BigDecimal lowerBound, BigDecimal higherBound);
 
     List<DishEntity> findAllByLabelsContaining(String label);
-
-    List<DishEntity> findAllByCategory(Category category);
 
     int deleteAllByNameIgnoringCase(String name);
 

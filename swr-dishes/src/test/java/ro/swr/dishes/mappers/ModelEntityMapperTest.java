@@ -2,7 +2,9 @@ package ro.swr.dishes.mappers;
 
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import model.Dish;
+import model.Ingredient;
 import model.NutritionalValue;
 import model.Recipe;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +14,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import ro.swr.dishes.repository.entities.DishEntity;
 import ro.swr.dishes.repository.entities.RecipeEntity;
 
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -74,12 +77,15 @@ class ModelEntityMapperTest {
     }
 
     private static Stream<Arguments> provideRecipeValidFromAndToEntityTestData() {
+        Type ingredientList =
+                new TypeToken<List<Ingredient>>() {
+                }.getType();
         return Stream.of(
                 Arguments.of(
                         getTestRecipeEntityFromFile(TEST_RECIPE_NAME, SINGLE_INGREDIENT, NUTRITIONAL_VALUE_FULL),
                         getTestRecipe(
                                 TEST_RECIPE_NAME,
-                                gson.fromJson(readJsonAsString(SINGLE_INGREDIENT), List.class),
+                                gson.fromJson(readJsonAsString(SINGLE_INGREDIENT), ingredientList),
                                 gson.fromJson(readJsonAsString(NUTRITIONAL_VALUE_FULL), NutritionalValue.class)
                         )
                 ),
@@ -87,7 +93,8 @@ class ModelEntityMapperTest {
                         getTestRecipeEntityFromFile(TEST_RECIPE_NAME, MULTIPLE_INGREDIENTS, NUTRITIONAL_VALUE_PARTIAL),
                         getTestRecipe(
                                 TEST_RECIPE_NAME,
-                                gson.fromJson(readJsonAsString(MULTIPLE_INGREDIENTS), List.class),
+
+                                gson.fromJson(readJsonAsString(MULTIPLE_INGREDIENTS), ingredientList),
                                 gson.fromJson(readJsonAsString(NUTRITIONAL_VALUE_PARTIAL), NutritionalValue.class)
 
                         )

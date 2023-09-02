@@ -1,12 +1,17 @@
 package ro.swr.dishes.services;
 
+import model.Category;
 import model.Dish;
+import model.DishMenu;
 import model.rest.DishFilterOptions;
 import model.rest.SearchRequest;
 import model.rest.SearchResponse;
 import ro.swr.dishes.repository.entities.DishEntity;
+import ro.swr.services.SwrServiceBase;
 
-public interface DishService extends SwrServiceBase<Dish, DishEntity>{
+import java.util.List;
+
+public interface DishService extends SwrServiceBase<Dish, DishEntity> {
 
     SearchResponse<Dish> searchDish(SearchRequest<DishFilterOptions> searchRequest);
 
@@ -14,7 +19,9 @@ public interface DishService extends SwrServiceBase<Dish, DishEntity>{
 
     SearchResponse<Dish> getMenu(SearchRequest<String> searchRequest);
 
-    SearchResponse<Dish> getMenu();
+    DishMenu getMenu();
+
+    List<Category> getDishCategories();
 
 
 }

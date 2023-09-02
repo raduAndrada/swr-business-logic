@@ -55,21 +55,16 @@ public class DishRepositoryTest {
         assertThat(dishes, hasSize(4));
     }
 
-    @Test
-    void testFindAllByCategory() {
-        List<DishEntity> dishes = dishRepository.findAllByCategory(Category.DESSERT);
-        assertThat(dishes, hasSize(4));
-    }
 
     static List<DishEntity> generateInitialDbValues() {
         List<DishEntity> entities = Lists.newArrayList();
         for (int i = 0; i < 10; i++) {
             String labels = "FISH";
-            Category category = Category.MAIN_COURSE;
+            String category = "SANDWICHES";
             String ingredientSrc = SINGLE_INGREDIENT;
             if (i % 3 == 0) {
                 labels += "," + SUGAR_FREE;
-                category = Category.DESSERT;
+                category = "BRUNCH";
                 ingredientSrc = MULTIPLE_INGREDIENTS;
             }
             entities.add(getTestDishEntity(

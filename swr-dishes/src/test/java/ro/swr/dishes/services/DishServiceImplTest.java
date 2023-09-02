@@ -17,6 +17,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ro.swr.dishes.mappers.DishEntityToHistoryMapper;
+import ro.swr.dishes.repository.CategoryRepository;
 import ro.swr.dishes.repository.DishHistoryRepository;
 import ro.swr.dishes.repository.DishRepository;
 import ro.swr.dishes.repository.entities.DishEntity;
@@ -44,7 +45,10 @@ class DishServiceImplTest {
     @Mock
     private DishRepository dishRepository;
 
-    private DishService dishService = new DishServiceImpl(dishRepository, historyRepository);
+    @Mock
+    private CategoryRepository categoryRepository;
+
+    private DishService dishService = new DishServiceImpl(dishRepository, historyRepository, categoryRepository);
 
     private final List<DishEntity> mockedResponse =
             getTestListFromJson(MULTIPLE_DISHES, new TypeToken<List<DishEntity>>() {
@@ -52,7 +56,7 @@ class DishServiceImplTest {
 
     @BeforeEach
     void setup() {
-        dishService = new DishServiceImpl(dishRepository, historyRepository);
+        dishService = new DishServiceImpl(dishRepository, historyRepository, categoryRepository);
     }
 
 
@@ -67,9 +71,9 @@ class DishServiceImplTest {
         when(dishRepository.findAllByPriceIsBetween(searchPriceLowerBound, searchPriceUpperBound))
                 .thenReturn(mockedResponse.stream().filter(filter).collect(Collectors.toList()));
 
+
         SearchResponse<Dish> response = dishService.searchDish(searchRequest);
         assertEquals(expectedSize, response.getData().getTotalElements());
-
         verifyNoInteractions(historyRepository);
         verify(dishRepository).findAllByPriceIsBetween(searchPriceLowerBound, searchPriceUpperBound);
     }
@@ -120,7 +124,9 @@ class DishServiceImplTest {
 
         SearchRequest categoryRequest =
                 buildSearchRequest(DishFilterOptions.builder()
-                        .category(Category.APPETIZER)
+                        .category(Category.builder()
+                                .name("SANDWICHES")
+                                .build())
                         .build());
 
         SearchRequest nameRequest =
@@ -131,7 +137,9 @@ class DishServiceImplTest {
         SearchRequest complexRequest =
                 buildSearchRequest(DishFilterOptions.builder()
                         .name(DISH)
-                        .category(Category.APPETIZER)
+                        .category(Category.builder()
+                                .name("BRUNCH")
+                                .build())
                         .label(Lists.newArrayList(Label.SUGAR_FREE))
                         .build());
 

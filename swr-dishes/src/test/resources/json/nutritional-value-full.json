@@ -1,13 +1,15 @@
 {
   "kcal": 1500.0,
   "kj": 4500.0,
-  "protein": 28.0,
-  "fats": 6.0,
-  "carbs": 10.0,
-  "fiber": 20.0,
-  "sugar": 5.0,
-  "saturated": 3.0,
-  "salt": 10.0,
+  "values": {
+    "protein": 28.0,
+    "fats": 6.0,
+    "carbs": 10.0,
+    "fiber": 20.0,
+    "sugar": 5.0,
+    "saturated": 3.0,
+    "salt": 10.0
+  },
   "ingredients": {
     "ingredient1": 10.0,
     "ingredient2": 90.0

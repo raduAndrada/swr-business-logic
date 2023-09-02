@@ -1,0 +1,35 @@
+version: 2.21.0
+services:
+  database:
+    container_name: database
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: warlord
+      POSTGRES_DB: swr-dishes-db
+
+  swr-dishes-app:
+    depends_on:
+      - database
+    image: swr/swr-dishes:0.0.1-SNAPSHOT
+    ports:
+      - "9000:9000"
+    environment:
+      PROFILE: develop
+      DATABASESERVER_PORT: "5432"
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/swr-dishes-db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: warlord
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+    container_name: swr-dishes-app
+    build:
+      dockerfile: Dockerfile
+
+
+networks:
+  backend:
+    driver: bridge

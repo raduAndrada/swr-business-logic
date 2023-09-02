@@ -1,15 +1,13 @@
 package ro.swr.dishes.repository.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import model.DatabaseJsonArray;
 import model.DatabaseJsonObject;
+import model.IngredientsJsonArray;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -28,10 +26,12 @@ public class RecipeEntity {
 
     private String name;
 
-    @DatabaseJsonObject(type = "ro.swr.dishes.model.NutritionalValue")
+    @DatabaseJsonObject
+    @Column(columnDefinition="text")
     private String nutritionalValue; // JSONObject
 
-    @DatabaseJsonArray(type = "ro.swr.dishes.model.Ingredient")
+    @IngredientsJsonArray
+    @Column(columnDefinition="text")
     private String ingredients; //JSONObject
 
     @CreationTimestamp

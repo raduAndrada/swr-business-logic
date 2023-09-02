@@ -1,79 +1,26 @@
 [
   {
     "name": "dish1",
-    "ingredients": [
-      {
-        "shortName": "ingredientShortName1",
-        "longName": "ingredientLongName1",
-        "description": "ingredientDescription1",
-        "quantity": 1.0,
-        "um": "g",
-        "recipeName": "testRecipe"
-      },
-      {
-        "shortName": "ingredientShortName2",
-        "longName": "ingredientLongName2",
-        "description": "ingredientDescription2",
-        "quantity": 2.0,
-        "um": "g",
-        "recipeName": "testRecipe"
-      }
-    ],
     "price": 75.0,
-    "labels": "FISH,GLUTEN_FREE",
-    "category": "MAIN_COURSE"
+    "labels": "[FISH,GLUTEN_FREE]",
+    "category": {"name": "Sandwiches"}
   },
   {
     "name": "dish2",
-    "ingredients": [
-      {
-        "shortName": "ingredientShortName3",
-        "longName": "ingredientLongName3",
-        "description": "ingredientDescription3",
-        "quantity": 3.0,
-        "um": "piece",
-        "recipeName": "testRecipe"
-      },
-      {
-        "shortName": "ingredientShortName4",
-        "longName": "ingredientLongName4",
-        "description": "ingredientDescription4",
-        "quantity": 4.0,
-        "um": "piece",
-        "recipeName": "testRecipe"
-      }
-    ],
     "price": 90.0,
-    "labels": "SUGAR_FREE",
-    "category": "APPETIZER"
+    "labels": "[SUGAR_FREE]",
+    "category": {"name": "Sandwiches"}
   },
   {
     "name": "dish3",
-    "ingredients": [
-      {
-        "shortName": "ingredientShortName3",
-        "longName": "ingredientLongName3",
-        "description": "ingredientDescription3",
-        "quantity": 3.0,
-        "um": "piece",
-        "recipeName": "testRecipe"
-      },
-      {
-        "shortName": "ingredientShortName4",
-        "longName": "ingredientLongName4",
-        "description": "ingredientDescription4",
-        "quantity": 4.0,
-        "um": "piece",
-        "recipeName": "testRecipe"
-      }
-    ],
     "price": 90.0,
-    "labels": "SUGAR_FREE",
-    "category": "APPETIZER"
+    "labels": "[SUGAR_FREE]",
+    "category": {"name": "Brunch"}
   },
   {
     "name": "dish4",
     "price": 10.0,
-    "category": "FIRST_DISH"
+    "category":
+      {"name": "Brunch"}
   }
 ]

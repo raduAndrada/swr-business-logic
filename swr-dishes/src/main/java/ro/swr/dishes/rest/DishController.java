@@ -1,18 +1,22 @@
 package ro.swr.dishes.rest;
 
 
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import model.Category;
 import model.Dish;
+import model.DishMenu;
 import model.rest.SearchRequest;
 import model.rest.SearchResponse;
 import org.springframework.web.bind.annotation.*;
 import ro.swr.dishes.services.DishService;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping(path = "/api/dishes", produces = "application/json")
-@CrossOrigin(origins = {"http://tacocloud:8080", "http://tacocloud.com"})
-@Data
+@CrossOrigin(origins = {"http://localhost:4200", "https://localhost:4200"})
+@RequiredArgsConstructor
 public class DishController {
 
     private final DishService dishService;
@@ -23,8 +27,13 @@ public class DishController {
     }
 
     @GetMapping("/menu")
-    public SearchResponse<Dish> getMenu() {
+    public DishMenu getMenu() {
         return dishService.getMenu();
+    }
+
+    @GetMapping("/categories")
+    public List<Category> getCategories() {
+        return dishService.getDishCategories();
     }
 
     @DeleteMapping("/{name}")

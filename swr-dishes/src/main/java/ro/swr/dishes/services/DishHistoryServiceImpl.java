@@ -1,26 +1,30 @@
 package ro.swr.dishes.services;
 
+import lombok.RequiredArgsConstructor;
 import model.Dish;
 import model.rest.SearchRequest;
 import model.rest.SearchResponse;
-import org.apache.maven.shared.utils.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import ro.swr.dishes.mappers.DishEntityToHistoryMapper;
-import ro.swr.dishes.mappers.ModelEntityMapper;
 import ro.swr.dishes.repository.DishHistoryRepository;
 import ro.swr.dishes.repository.DishRepository;
 import ro.swr.dishes.repository.entities.DishHistoryEntity;
+import ro.swr.services.mappers.ModelEntityMapper;
 
 import java.util.List;
 
 
 @Component
-public record DishHistoryServiceImpl(DishHistoryRepository historyRepository,
-                                     DishRepository dishRepository) implements DishHistoryService {
+@RequiredArgsConstructor
+public class DishHistoryServiceImpl implements DishHistoryService {
+
+    private final DishHistoryRepository historyRepository;
+    private final DishRepository dishRepository;
 
     private static final DishEntityToHistoryMapper mapper = new DishEntityToHistoryMapper();
     private static final ModelEntityMapper<Dish, DishHistoryEntity> genericMapper = new ModelEntityMapper<>(Dish.class, DishHistoryEntity.class);

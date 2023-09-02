@@ -7,9 +7,10 @@ import model.*;
 import model.rest.SearchRequest;
 import org.assertj.core.util.Lists;
 import org.springframework.util.StringUtils;
+import ro.swr.dishes.repository.entities.CategoryEntity;
 import ro.swr.dishes.repository.entities.DishEntity;
-import ro.swr.dishes.repository.entities.IngredientEntity;
 import ro.swr.dishes.repository.entities.RecipeEntity;
+import ro.swr.dishes.repository.entities.SubcategoryEntity;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -61,21 +62,18 @@ public class TestUtils {
             String name,
             BigDecimal price,
             String labels,
-            Category category,
+            String category,
             String ingredientsFileName,
             String nutritionalValueFileName) {
         return DishEntity.builder()
                 .name(name)
                 .price(price)
                 .labels(labels)
-                .category(category)
+                .subcategory(SubcategoryEntity.builder()
+                        .name(category)
+                        .build())
                 .ingredients(
-                        gson
-                                .fromJson(
-                                        readJsonAsString(ingredientsFileName),
-                                        new TypeToken<List<IngredientEntity>>() {
-                                        }.getType()
-                                )
+                        readJsonAsString(ingredientsFileName)
                 )
                 .nutritionalValue(readJsonAsString(nutritionalValueFileName))
                 .build();
@@ -93,6 +91,7 @@ public class TestUtils {
                 )
                 .nutritionalValue(gson.fromJson(readJsonAsString(nutritionalValueFileName), NutritionalValue.class))
                 .labels(Lists.newArrayList())
+                .subcategory(Subcategory.builder().build())
                 .build();
     }
 
@@ -143,6 +142,7 @@ public class TestUtils {
 
     public static void trimEntityWhiteSpaces(DishEntity entity) {
         entity.setNutritionalValue(trimWhiteSpaces(entity.getNutritionalValue()));
+        entity.setIngredients(trimWhiteSpaces(entity.getIngredients()));
     }
 
     public static String trimWhiteSpaces(String field) {

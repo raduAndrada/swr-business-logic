@@ -1,7 +1,9 @@
 {
   "kcal": 1500.0,
   "kj": 4500.0,
-  "protein": 28.0,
-  "fats": 6.0,
-  "saturated": 3.0
+  "values": {
+    "protein": 28.0,
+    "fats": 6.0,
+    "saturated": 3.0
+  }
 }

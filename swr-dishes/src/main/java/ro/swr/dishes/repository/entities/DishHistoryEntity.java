@@ -1,15 +1,11 @@
 package ro.swr.dishes.repository.entities;
 
 import com.google.gson.annotations.Expose;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import model.Category;
-import model.DatabaseJsonObject;
-import model.DatabaseLabel;
+import model.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -30,14 +26,16 @@ public class DishHistoryEntity {
     private String name;
 
     @Expose
-    @OneToMany
-    private List<IngredientEntity> ingredients;
+    @IngredientsJsonArray
+    @Column(columnDefinition="text")
+    private String ingredients;
 
     @Expose
     private BigDecimal price;
 
     @Expose
-    @DatabaseJsonObject(type = "ro.swr.dishes.model.NutritionalValue")
+    @DatabaseJsonObject
+    @Column(columnDefinition="text")
     private String nutritionalValue; // save as JSONObject in the db
 
     @Expose
@@ -45,7 +43,9 @@ public class DishHistoryEntity {
     private String labels; // list of labels
 
     @Expose
-    private Category category;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subcategory_name")
+    private SubcategoryEntity subcategory;
 
     @CreationTimestamp
     private Instant creationDate;

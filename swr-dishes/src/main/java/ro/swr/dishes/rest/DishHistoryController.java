@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import ro.swr.dishes.services.DishHistoryService;
 
 @RestController
-@RequestMapping(path="/api/history", produces="application/json")
-@CrossOrigin(origins={"http://tacocloud:8080", "http://tacocloud.com"})
+@RequestMapping(path="/api/dihses-history", produces="application/json")
+@CrossOrigin(origins = {"http://localhost:4200", "https://localhost:4200"})
 @RequiredArgsConstructor
 public class DishHistoryController {
 

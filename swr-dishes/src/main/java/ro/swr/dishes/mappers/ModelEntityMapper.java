@@ -3,17 +3,14 @@ package ro.swr.dishes.mappers;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import model.DatabaseJsonArray;
-import model.DatabaseJsonObject;
-import model.DatabaseLabel;
-import model.Label;
+import model.*;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.util.CollectionUtils;
-
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
@@ -23,7 +20,11 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
-public record ModelEntityMapper<M, E>(Class<M> modelClass, Class<E> entityClass) {
+@RequiredArgsConstructor
+public class ModelEntityMapper<M, E> {
+
+    private final Class<M> modelClass;
+    private final  Class<E> entityClass;
 
     private static ModelMapper mapper = new ModelMapper();
     private static Gson gson = new Gson();
@@ -67,7 +68,7 @@ public record ModelEntityMapper<M, E>(Class<M> modelClass, Class<E> entityClass)
                 srcField.setAccessible(true);
                 setModelField(src, dst, srcField);
             }
-            if (srcField.isAnnotationPresent(DatabaseJsonArray.class)) {
+            if (srcField.isAnnotationPresent(IngredientsJsonArray.class)) {
                 srcField.setAccessible(true);
                 setModelArrayField(src, dst, srcField);
             }
@@ -94,11 +95,9 @@ public record ModelEntityMapper<M, E>(Class<M> modelClass, Class<E> entityClass)
         try {
             value = (String) srcField.get(src);
             if (StringUtils.isNotBlank(value)) {
-                Type arrayType = new TypeToken<List<Object>>() {
+                Type arrayType = new TypeToken<List<Ingredient>>() {
                 }.getType();
-
-                List<Object> array = gson.fromJson(value, arrayType);
-
+                List<Ingredient> array = gson.fromJson(value, arrayType);
                 Field dstField = modelClass.getDeclaredField(srcField.getName());
                 dstField.setAccessible(true);
                 dstField.set(dst, array);
@@ -128,7 +127,7 @@ public record ModelEntityMapper<M, E>(Class<M> modelClass, Class<E> entityClass)
     private void convertToJsonObjectField(M src, E dst) {
         for (Field dstField : entityClass.getDeclaredFields()) {
             if (dstField.isAnnotationPresent(DatabaseJsonObject.class)
-                    || dstField.isAnnotationPresent(DatabaseJsonArray.class)) {
+                    || dstField.isAnnotationPresent(IngredientsJsonArray.class)) {
                 dstField.setAccessible(true);
                 setEntityField(src, dst, dstField);
             }
@@ -166,7 +165,7 @@ public record ModelEntityMapper<M, E>(Class<M> modelClass, Class<E> entityClass)
 
     private List<Label> convertStringToLabelList(String value) {
         if (StringUtils.isNotBlank(value)) {
-            String[] values = value.split(",");
+            String[] values = gson.fromJson(value, String[].class);
             return Arrays.stream(values)
                     .map(Label::valueOf)
                     .collect(Collectors.toList());

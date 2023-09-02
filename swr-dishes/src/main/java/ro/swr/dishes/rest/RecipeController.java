@@ -6,12 +6,12 @@ import model.rest.SearchResponse;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.*;
 import ro.swr.dishes.repository.entities.RecipeEntity;
-import ro.swr.dishes.services.SwrServiceBase;
+import ro.swr.services.SwrServiceBase;
 
 
 @RestController
 @RequestMapping(path = "/api/recipes", produces = "application/json")
-@CrossOrigin(origins = {"http://tacocloud:8080", "http://tacocloud.com"})
+@CrossOrigin(origins = {"http://localhost:4200", "https://localhost:4200"})
 @RequiredArgsConstructor
 public class RecipeController {
 

@@ -1,9 +1,9 @@
 package ro.swr.dishes.services;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
-import model.Category;
-import model.Dish;
-import model.Label;
+import model.*;
 import model.rest.DishFilterOptions;
 import model.rest.SearchRequest;
 import model.rest.SearchResponse;
@@ -16,12 +16,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import ro.swr.dishes.mappers.DishEntityToHistoryMapper;
 import ro.swr.dishes.mappers.ModelEntityMapper;
+import ro.swr.dishes.repository.CategoryRepository;
 import ro.swr.dishes.repository.DishHistoryRepository;
 import ro.swr.dishes.repository.DishRepository;
+import ro.swr.dishes.repository.entities.CategoryEntity;
 import ro.swr.dishes.repository.entities.DishEntity;
+import ro.swr.services.SwrServiceBaseImpl;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -33,15 +37,19 @@ public class DishServiceImpl extends SwrServiceBaseImpl<Dish, DishEntity> implem
 
     private DishRepository dishRepository;
     private DishHistoryRepository dishHistoryRepository;
+    private CategoryRepository categoryRepository;
 
     private static final DishEntityToHistoryMapper dishHistoryMapper = new DishEntityToHistoryMapper();
     private static final ModelEntityMapper<Dish, DishEntity> mapper = new ModelEntityMapper(Dish.class, DishEntity.class);
+    private static final ModelEntityMapper<Category, CategoryEntity> categoryMapper = new ModelEntityMapper<>(Category.class, CategoryEntity.class);
 
     public DishServiceImpl(DishRepository dishRepository,
-                           DishHistoryRepository dishHistoryRepository) {
-        super(dishRepository, mapper);
+                           DishHistoryRepository dishHistoryRepository,
+                           CategoryRepository categoryRepository) {
+        super(dishRepository, new ro.swr.services.mappers.ModelEntityMapper(Dish.class, DishEntity.class));
         this.dishRepository = dishRepository;
         this.dishHistoryRepository = dishHistoryRepository;
+        this.categoryRepository = categoryRepository;
     }
 
 
@@ -66,9 +74,34 @@ public class DishServiceImpl extends SwrServiceBaseImpl<Dish, DishEntity> implem
     }
 
     @Override
-    public SearchResponse<Dish> getMenu() {
-        Pageable pageable = PageRequest.of(0, 15, Sort.by("category").ascending());
-        return new SearchResponse(mapper.fromEntity(dishRepository.findAll(pageable)));
+    public DishMenu getMenu() {
+        List<Dish> dishes = mapper.fromEntity((List<DishEntity>) dishRepository.findAll(Sort.by("price").ascending()));
+        Map<Subcategory, List<Dish>> dishesMenu = Maps.newHashMap();
+        dishes.stream()
+                .forEach(
+                        d -> {
+                            if (!dishesMenu.containsKey(d.getSubcategory())) {
+                                dishesMenu.put(d.getSubcategory(), Lists.newArrayList(d));
+                            } else {
+                                List<Dish> temp = dishesMenu.get(d.getSubcategory());
+                                temp.add(d);
+                                dishesMenu.put(d.getSubcategory(), temp);
+                            }
+                        }
+                );
+
+        return DishMenu.builder()
+                .subcategoryMenu(dishesMenu.entrySet().stream().map(entry -> DishWrapper.builder()
+                        .subcategory(entry.getKey())
+                        .dishes(entry.getValue())
+                        .build())
+                        .collect(Collectors.toList()))
+                .build();
+    }
+
+    @Override
+    public List<Category> getDishCategories() {
+        return categoryMapper.fromEntity((List<CategoryEntity>) categoryRepository.findAll());
     }
 
     private SearchResponse<Dish> performSearch(SearchRequest<DishFilterOptions> searchRequest) {
@@ -97,7 +130,7 @@ public class DishServiceImpl extends SwrServiceBaseImpl<Dish, DishEntity> implem
                     add = false;
                 }
             } else if (Objects.nonNull(filterCategory)) {
-                if (!d.getCategory().equals(filterCategory)) {
+                if (!d.getSubcategory().getCategory().equals(filterCategory)) {
                     add = false;
                 }
             } else if (!CollectionUtils.isEmpty(filterLabels)) {
