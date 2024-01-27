@@ -6,6 +6,7 @@ import model.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import ro.swr.dishes.repository.CategoryRepository;
 import ro.swr.dishes.repository.DishRepository;
 import ro.swr.dishes.repository.RecipeRepository;
@@ -32,6 +33,7 @@ public class SpringConfiguration {
     }
 
     @Bean
+    @Profile({"dev", "prod"})
     public CommandLineRunner dataLoader(DishRepository dishRepository,
                                         CategoryRepository categoryRepository,
                                         SubcategoryRepository subcategoryRepository) {
@@ -117,8 +119,6 @@ public class SpringConfiguration {
                 .shortName("ingredient01")
                 .longName("ingredient01")
                 .description("description01")
-                .quantity(100.0)
-                .um("g")
                 .build();
         Ingredient ingredient2 = Ingredient.builder()
                 .shortName("ingredient02")
@@ -131,30 +131,22 @@ public class SpringConfiguration {
                 .shortName("ingredient03")
                 .longName("ingredient03")
                 .description("description03")
-                .quantity(1.0)
-                .um("piece")
                 .build();
 
         Ingredient ingredient4 = Ingredient.builder()
                 .shortName("ingredient01")
                 .longName("ingredient01")
                 .description("description01")
-                .quantity(100.0)
-                .um("g")
                 .build();
         Ingredient ingredient5 = Ingredient.builder()
                 .shortName("ingredient02")
                 .longName("ingredient02")
                 .description("description02")
-                .quantity(100.0)
-                .um("g")
                 .build();
         Ingredient ingredient6 = Ingredient.builder()
                 .shortName("ingredient03")
                 .longName("ingredient03")
                 .description("description03")
-                .quantity(1.0)
-                .um("piece")
                 .build();
 
         NutritionalValue nv = NutritionalValue.builder()
@@ -166,6 +158,8 @@ public class SpringConfiguration {
 
         DishEntity dish1 = DishEntity.builder()
                 .name("dish01")
+                .description("test description")
+                .quantity("350g")
                 .price(BigDecimal.TEN)
                 .labels(gson.toJson(ImmutableList.of(Label.SUGAR_FREE, Label.GLUTEN_FREE)))
                 .subcategory(sandwichesSub)
@@ -178,6 +172,8 @@ public class SpringConfiguration {
 
         DishEntity dish2 = DishEntity.builder()
                 .name("dish02")
+                .description("test description 2")
+                .quantity("150g")
                 .price(BigDecimal.valueOf(25))
                 .labels(gson.toJson(ImmutableList.of(Label.FISH)))
                 .subcategory(togoSub)
@@ -189,6 +185,8 @@ public class SpringConfiguration {
 
         DishEntity dish3 = DishEntity.builder()
                 .name("dish03")
+                .description("test description 3")
+                .quantity("1 piece")
                 .price(BigDecimal.valueOf(40))
                 .labels(gson.toJson(ImmutableList.of(Label.VEGAN)))
                 .subcategory(sandwichesSub)

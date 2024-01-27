@@ -29,6 +29,13 @@ public class DishEntity {
     private String name;
 
     @Expose
+    @Column(columnDefinition="text")
+    private String description;
+
+    @Expose
+    private String quantity;
+
+    @Expose
     @IngredientsJsonArray
     @Column(columnDefinition="text")
     private String ingredients;

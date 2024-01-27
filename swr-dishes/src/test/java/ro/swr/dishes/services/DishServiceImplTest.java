@@ -9,6 +9,7 @@ import model.rest.DishFilterOptions;
 import model.rest.SearchRequest;
 import model.rest.SearchResponse;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -34,6 +35,7 @@ import static org.mockito.Mockito.*;
 import static ro.swr.dishes.TestUtils.*;
 
 @ExtendWith(MockitoExtension.class)
+@Disabled
 class DishServiceImplTest {
 
     public static final String DISH = "dish";

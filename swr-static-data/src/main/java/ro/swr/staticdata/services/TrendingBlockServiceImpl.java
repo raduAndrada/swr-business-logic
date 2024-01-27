@@ -9,6 +9,7 @@ import ro.swr.staticdata.model.TrendingBlock;
 import ro.swr.staticdata.repository.TrendingBlockRepository;
 import ro.swr.staticdata.repository.entities.TrendingBlockEntity;
 import ro.swr.staticdata.services.mappers.ImageMapper;
+import ro.swr.staticdata.services.mappers.TrendingBlockModelMapper;
 
 import java.util.List;
 
@@ -19,12 +20,12 @@ public class TrendingBlockServiceImpl implements TrendingBlockService {
 
     private final TrendingBlockRepository trendingRepository;
 
-    private final ImageMapper<TrendingBlock, TrendingBlockEntity> trendingMapper;
+    private final TrendingBlockModelMapper trendingMapper;
 
     @Override
     @Transactional
-    public List<TrendingBlock> findAllInTrending(boolean inTrending) {
-        return trendingMapper.fromEntity(trendingRepository.findAllByInTrending(inTrending));
+    public List<TrendingBlock> findAllInTrending(boolean inTrending, String lang) {
+        return trendingMapper.fromEntity(trendingRepository.findAllByInTrending(inTrending), lang);
     }
 
     @Override

@@ -10,18 +10,20 @@ import org.modelmapper.TypeMap;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
-import org.springframework.data.annotation.Immutable;
 import org.springframework.web.multipart.MultipartFile;
 import ro.swr.staticdata.model.ImageBlock;
 import ro.swr.staticdata.model.TeamBlock;
 import ro.swr.staticdata.model.TrendingBlock;
+import ro.swr.staticdata.repository.ImageBlockRepository;
 import ro.swr.staticdata.repository.TeamBlockRepository;
 import ro.swr.staticdata.repository.TrendingBlockRepository;
 import ro.swr.staticdata.repository.entities.ImageBlockEntity;
 import ro.swr.staticdata.repository.entities.TeamBlockEntity;
 import ro.swr.staticdata.repository.entities.TrendingBlockEntity;
 import ro.swr.staticdata.services.mappers.ImageMapper;
+import ro.swr.staticdata.services.mappers.TrendingBlockModelMapper;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -34,18 +36,18 @@ import static ro.swr.staticdata.services.mappers.ImageUtils.decompressImage;
 public class SpringConfiguration {
 
     @Bean
-    public ImageMapper<TrendingBlock, TrendingBlockEntity> trendingMapper(ModelMapper imageModelMapper) {
-        return new ImageMapper(imageModelMapper, TrendingBlock.class, TrendingBlockEntity.class);
+    public TrendingBlockModelMapper trendingMapper(ModelMapper imageModelMapper) {
+        return new TrendingBlockModelMapper(imageModelMapper);
     }
 
     @Bean
     public ImageMapper<ImageBlock, ImageBlockEntity> imgMapper(ModelMapper imageModelMapper) {
-        return new ImageMapper(imageModelMapper, ImageBlock.class, ImageBlockEntity.class);
+        return new ImageMapper<>(imageModelMapper, ImageBlock.class, ImageBlockEntity.class);
     }
 
     @Bean
     public ImageMapper<TeamBlock, TeamBlockEntity> teamMapper(ModelMapper imageModelMapper) {
-        return new ImageMapper(imageModelMapper, TeamBlock.class, TeamBlockEntity.class);
+        return new ImageMapper<>(imageModelMapper, TeamBlock.class, TeamBlockEntity.class);
     }
 
     @Bean
@@ -57,11 +59,11 @@ public class SpringConfiguration {
         Converter<byte[], byte[]> compressedToDecompressed = c -> decompressImage(c.getSource());
         imageMapper.addMappings(
                 modelMapper ->
-                    modelMapper.using(compressedToDecompressed).map(ImageBlockEntity::getImage, ImageBlock::setImage)
-                );
+                        modelMapper.using(compressedToDecompressed).map(ImageBlockEntity::getImage, ImageBlock::setImage)
+        );
 
         TypeMap<TeamBlockEntity, TeamBlock> teamMapper = mapper.createTypeMap(TeamBlockEntity.class, TeamBlock.class);
-        Converter<String, Map<String,String>> socialMediaConverter = c -> gson.fromJson(c.getSource(), Map.class);
+        Converter<String, Map<String, String>> socialMediaConverter = c -> gson.fromJson(c.getSource(), Map.class);
         Converter<String, List<String>> descriptionConverter = c -> gson.fromJson(c.getSource(), List.class);
         teamMapper.addMappings(
                 modelMapper -> {
@@ -71,8 +73,8 @@ public class SpringConfiguration {
         );
 
         TypeMap<TeamBlock, TeamBlockEntity> teamEntityMapper = mapper.createTypeMap(TeamBlock.class, TeamBlockEntity.class);
-        Converter<Map<String,String>, String> socialMediaConverterFromJson = c -> gson.toJson(c.getSource(), Map.class);
-        Converter<Map<String,String>, String> descriptionConverterFromJson = c -> gson.toJson(c.getSource(), Map.class);
+        Converter<Map<String, String>, String> socialMediaConverterFromJson = c -> gson.toJson(c.getSource(), Map.class);
+        Converter<Map<String, String>, String> descriptionConverterFromJson = c -> gson.toJson(c.getSource(), Map.class);
         teamEntityMapper.addMappings(
                 modelMapper -> {
                     modelMapper.using(socialMediaConverterFromJson).map(TeamBlock::getSocialMedia, TeamBlockEntity::setSocialMedia);
@@ -91,13 +93,14 @@ public class SpringConfiguration {
 
 
     @Bean
+    @Profile({"dev"})
     public CommandLineRunner dataLoader(TeamBlockRepository teamRepository,
                                         ImageMapper<ImageBlock, ImageBlockEntity> imgMapper,
-                                        TrendingBlockRepository trendingRepository
-                                        ) throws IOException {
+                                        TrendingBlockRepository trendingRepository,
+                                        ImageBlockRepository imageRepository
+    ) throws IOException {
         Gson gson = new Gson();
-        byte[] data = this.getClass().getClassLoader()
-                .getResourceAsStream("images/andrada.jpg").readAllBytes();
+        byte[] data = getDataBytes("images/andrada.jpg");
         MultipartFile file = new CustomMultipartFile(data);
         ImageBlockEntity entity = imgMapper.fromFile(file);
         TeamBlockEntity team1 = TeamBlockEntity.builder()
@@ -111,32 +114,73 @@ public class SpringConfiguration {
                                 Map.class))
                 .build();
 
-        byte[] data1 = this.getClass().getClassLoader()
-                .getResourceAsStream("images/outside1.jpg").readAllBytes();
-        byte[] data2 = this.getClass().getClassLoader()
-                .getResourceAsStream("images/inside1.jpg").readAllBytes();
-        byte[] data3 = this.getClass().getClassLoader()
-                .getResourceAsStream("images/dinner1.jpg").readAllBytes();
+        byte[] data1 = getDataBytes("images/outside1.jpg");
+        byte[] data2 = getDataBytes("images/inside1.jpg");
+        byte[] data3 = getDataBytes("images/dinner1.jpg");
         ImageBlockEntity entity1 = imgMapper.fromFile(new CustomMultipartFile(data1));
         ImageBlockEntity entity2 = imgMapper.fromFile(new CustomMultipartFile(data2));
         ImageBlockEntity entity3 = imgMapper.fromFile(new CustomMultipartFile(data3));
         TrendingBlockEntity trending1 = TrendingBlockEntity.builder()
-                .date("01/09/2023")
+                .date("05/01/2024")
                 .author("Andrada Radu")
                 .inTrending(true)
-                .shortDescription("Grand Opening happening soon. Stay tuned in for more details")
-                .title("Opening in October")
-                .description("More to come as soon as possible")
+                .shortDescription("We started changing this place in ...")
+                .shortDescriptionRO("Am inceput sa lucram la renovarea si reinventarea localului din ... ")
+                .title("Before and after")
+                .description("We started changing this place in September. It took quite some time to make into what it is today but we're almost there.")
+                .descriptionRO("Am inceput sa lucram la renovarea si reinventarea localului din Septembrie. Ne-a luat ceva timp sa reusim sa " +
+                        "aducem toate imbunatirile pe care ni le-am propus")
                 .images(List.of(entity1, entity2, entity3))
                 .build();
+
+        for (int i = 0; i < 3; i++) {
+            byte[] data4 = getDataBytes("images/dishes-menu-carousel-" + i + ".jpg");
+            MultipartFile file4 = new CustomMultipartFile(data4);
+            ImageBlockEntity entity4 = imgMapper.fromFile(file4);
+            entity4.setOrigin("dishes-menu::carousel");
+            entity4.setTitle("Dishes Menu Entry " + i);
+            imageRepository.save(entity4);
+        }
+
+        for (int i = 0; i < 4; i++) {
+            byte[] data4 = getDataBytes("images/about-carousel-" + i + ".jpg");
+            MultipartFile file4 = new CustomMultipartFile(data4);
+            ImageBlockEntity entity4 = imgMapper.fromFile(file4);
+            entity4.setOrigin("about::carousel");
+            entity4.setTitle("About Entry " + i);
+            imageRepository.save(entity4);
+        }
+
+        for (int i = 0; i < 9
+                ; i++) {
+            byte[] data4 = getDataBytes("images/gallery-lightbox-" + i + ".jpg");
+            MultipartFile file4 = new CustomMultipartFile(data4);
+            ImageBlockEntity entity4 = imgMapper.fromFile(file4);
+            entity4.setOrigin("gallery::lightbox");
+            entity4.setTitle("Gallery Entry " + i);
+            imageRepository.save(entity4);
+        }
+        for (int i = 0; i < 3; i++) {
+            byte[] data4 = getDataBytes("images/events-carousel-" + i + ".jpg");
+            MultipartFile file4 = new CustomMultipartFile(data4);
+            ImageBlockEntity entity4 = imgMapper.fromFile(file4);
+            entity4.setOrigin("events::carousel");
+            entity4.setTitle("Events Entry " + i);
+            imageRepository.save(entity4);
+        }
         return args -> {
-           // teamRepository.save(team1);
-//            trendingRepository.save(trending1);
+//            teamRepository.save(team1);
+            trendingRepository.save(trending1);
         };
     }
 
+    private byte[] getDataBytes(String s) throws IOException {
+        return this.getClass().getClassLoader()
+                .getResourceAsStream(s).readAllBytes();
+    }
+
     @AllArgsConstructor
-    private class CustomMultipartFile implements MultipartFile{
+    private class CustomMultipartFile implements MultipartFile {
 
         private byte[] input;
 
@@ -166,18 +210,18 @@ public class SpringConfiguration {
         }
 
         @Override
-        public byte[] getBytes()  {
+        public byte[] getBytes() {
             return input;
         }
 
         @Override
-        public InputStream getInputStream()  {
+        public InputStream getInputStream() {
             return new ByteArrayInputStream(input);
         }
 
         @Override
         public void transferTo(File destination) throws IOException, IllegalStateException {
-            try(FileOutputStream fos = new FileOutputStream(destination)) {
+            try (FileOutputStream fos = new FileOutputStream(destination)) {
                 fos.write(input);
             }
         }

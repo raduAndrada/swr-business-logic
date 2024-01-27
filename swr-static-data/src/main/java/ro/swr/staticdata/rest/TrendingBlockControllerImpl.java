@@ -21,8 +21,8 @@ public class TrendingBlockControllerImpl implements TrendingBlockController {
 
     @Override
     @GetMapping
-    public List<TrendingBlock> findAllInTrending(Boolean inTrending) {
-        return trendingService.findAllInTrending(inTrending);
+    public List<TrendingBlock> findAllInTrending(Boolean inTrending, String lang) {
+        return trendingService.findAllInTrending(inTrending, lang);
     }
 
     @Override

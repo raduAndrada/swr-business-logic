@@ -20,7 +20,9 @@ import static ro.swr.staticdata.services.mappers.ImageUtils.compressImage;
 @Slf4j
 @NoArgsConstructor
 @AllArgsConstructor
-public class ImageMapper<M, E> {
+public class
+
+ImageMapper<M, E> {
 
     private ModelMapper imageModelMapper;
 

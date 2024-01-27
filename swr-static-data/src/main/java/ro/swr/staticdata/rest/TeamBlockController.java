@@ -7,7 +7,7 @@ import ro.swr.staticdata.model.TeamBlock;
 import java.util.List;
 
 @RequestMapping(path = "/api/team-blocks", produces = "application/json")
-@CrossOrigin(origins = {"http://localhost:4200", "https://localhost:4200"})
+@CrossOrigin
 public interface TeamBlockController {
 
     @GetMapping

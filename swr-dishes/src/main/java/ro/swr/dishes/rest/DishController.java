@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/dishes", produces = "application/json")
-@CrossOrigin(origins = {"http://localhost:4200", "https://localhost:4200"})
+@CrossOrigin
 @RequiredArgsConstructor
 public class DishController {
 

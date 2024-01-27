@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface TrendingBlockService {
 
-    List<TrendingBlock> findAllInTrending(boolean inTrending);
+    List<TrendingBlock> findAllInTrending(boolean inTrending, String lang);
 
     TrendingBlock saveTrendingBlock(TrendingBlock trendingBlock, List<MultipartFile> images);
 

@@ -21,7 +21,11 @@ public class TrendingBlock {
 
     private String name;
 
+    private String nameRO;
+
     private String shortDescription;
+
+    private String shortDescriptionRO;
 
     private String date;
 
@@ -29,10 +33,14 @@ public class TrendingBlock {
 
     private String description;
 
+    private String descriptionRO;
+
     private boolean inTrending;
 
     private List<ImageBlock> images;
 
     private String title;
+
+    private String titleRO;
 
 }

@@ -3,6 +3,7 @@ package ro.swr.staticdata.services;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.codehaus.plexus.util.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import ro.swr.staticdata.model.ImageBlock;
@@ -40,7 +41,13 @@ public class ImageBlockServiceImpl implements ImageBlockService {
     @Override
     @Transactional
     public List<ImageBlock> findAllByOrigin(String origin) {
-        return imgMapper.fromEntity(imgRepository.findAllByOrigin(origin));
+        List<ImageBlockEntity> images;
+        if (StringUtils.isNotBlank(origin)) {
+            images = imgRepository.findAllByOrigin(origin);
+        } else {
+            images = (List<ImageBlockEntity>) imgRepository.findAll();
+        }
+        return imgMapper.fromEntity(images);
     }
 
     @Override

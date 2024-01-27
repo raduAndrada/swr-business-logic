@@ -20,9 +20,15 @@ public class TeamBlockEntity {
 
     private String title;
 
+    private String titleRO;
+
     private String name;
 
+    private String nameRO;
+
     private String description;
+
+    private String descriptionRO;
 
     @DatabaseJsonArray
     private String socialMedia; // stored as json array

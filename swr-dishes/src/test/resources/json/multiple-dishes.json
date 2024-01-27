@@ -2,25 +2,24 @@
   {
     "name": "dish1",
     "price": 75.0,
-    "labels": "[FISH,GLUTEN_FREE]",
-    "category": {"name": "Sandwiches"}
+    "labels": "[FISH,GLUTEN_FREE]"
+
   },
   {
     "name": "dish2",
     "price": 90.0,
-    "labels": "[SUGAR_FREE]",
-    "category": {"name": "Sandwiches"}
+    "labels": "[SUGAR_FREE]"
+
   },
   {
     "name": "dish3",
     "price": 90.0,
-    "labels": "[SUGAR_FREE]",
-    "category": {"name": "Brunch"}
+    "labels": "[SUGAR_FREE]"
+
   },
   {
     "name": "dish4",
-    "price": 10.0,
-    "category":
-      {"name": "Brunch"}
+    "price": 10.0
+
   }
 ]

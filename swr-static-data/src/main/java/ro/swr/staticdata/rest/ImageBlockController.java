@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RequestMapping(path = "/api/image-blocks", produces = "application/json")
-@CrossOrigin(origins = {"http://localhost:4200", "https://localhost:4200"})
+@CrossOrigin
 public interface ImageBlockController {
 
     @GetMapping
