@@ -93,7 +93,7 @@ public class SpringConfiguration {
 
 
     @Bean
-    @Profile({"dev"})
+    @Profile({"dev", "prod"})
     public CommandLineRunner dataLoader(TeamBlockRepository teamRepository,
                                         ImageMapper<ImageBlock, ImageBlockEntity> imgMapper,
                                         TrendingBlockRepository trendingRepository,
