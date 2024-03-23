@@ -93,14 +93,14 @@ public class SpringConfiguration {
 
 
     @Bean
-    @Profile({"dev", "prod"})
+    @Profile({"dev"})
     public CommandLineRunner dataLoader(TeamBlockRepository teamRepository,
                                         ImageMapper<ImageBlock, ImageBlockEntity> imgMapper,
                                         TrendingBlockRepository trendingRepository,
                                         ImageBlockRepository imageRepository
     ) throws IOException {
         Gson gson = new Gson();
-        byte[] data = getDataBytes("images/andrada.jpg");
+        byte[] data = getDataBytes("META-INF/images/andrada.jpg");
         MultipartFile file = new CustomMultipartFile(data);
         ImageBlockEntity entity = imgMapper.fromFile(file);
         TeamBlockEntity team1 = TeamBlockEntity.builder()
@@ -114,9 +114,9 @@ public class SpringConfiguration {
                                 Map.class))
                 .build();
 
-        byte[] data1 = getDataBytes("images/outside1.jpg");
-        byte[] data2 = getDataBytes("images/inside1.jpg");
-        byte[] data3 = getDataBytes("images/dinner1.jpg");
+        byte[] data1 = getDataBytes("META-INF/images/outside1.jpg");
+        byte[] data2 = getDataBytes("META-INF/images/inside1.jpg");
+        byte[] data3 = getDataBytes("META-INF/images/dinner1.jpg");
         ImageBlockEntity entity1 = imgMapper.fromFile(new CustomMultipartFile(data1));
         ImageBlockEntity entity2 = imgMapper.fromFile(new CustomMultipartFile(data2));
         ImageBlockEntity entity3 = imgMapper.fromFile(new CustomMultipartFile(data3));
@@ -134,7 +134,7 @@ public class SpringConfiguration {
                 .build();
 
         for (int i = 0; i < 3; i++) {
-            byte[] data4 = getDataBytes("images/dishes-menu-carousel-" + i + ".jpg");
+            byte[] data4 = getDataBytes("META-INF/images/dishes-menu-carousel-" + i + ".jpg");
             MultipartFile file4 = new CustomMultipartFile(data4);
             ImageBlockEntity entity4 = imgMapper.fromFile(file4);
             entity4.setOrigin("dishes-menu::carousel");
@@ -143,7 +143,7 @@ public class SpringConfiguration {
         }
 
         for (int i = 0; i < 4; i++) {
-            byte[] data4 = getDataBytes("images/about-carousel-" + i + ".jpg");
+            byte[] data4 = getDataBytes("META-INF/images/about-carousel-" + i + ".jpg");
             MultipartFile file4 = new CustomMultipartFile(data4);
             ImageBlockEntity entity4 = imgMapper.fromFile(file4);
             entity4.setOrigin("about::carousel");
@@ -153,7 +153,7 @@ public class SpringConfiguration {
 
         for (int i = 0; i < 9
                 ; i++) {
-            byte[] data4 = getDataBytes("images/gallery-lightbox-" + i + ".jpg");
+            byte[] data4 = getDataBytes("META-INF/images/gallery-lightbox-" + i + ".jpg");
             MultipartFile file4 = new CustomMultipartFile(data4);
             ImageBlockEntity entity4 = imgMapper.fromFile(file4);
             entity4.setOrigin("gallery::lightbox");
@@ -161,7 +161,7 @@ public class SpringConfiguration {
             imageRepository.save(entity4);
         }
         for (int i = 0; i < 3; i++) {
-            byte[] data4 = getDataBytes("images/events-carousel-" + i + ".jpg");
+            byte[] data4 = getDataBytes("META-INF/images/events-carousel-" + i + ".jpg");
             MultipartFile file4 = new CustomMultipartFile(data4);
             ImageBlockEntity entity4 = imgMapper.fromFile(file4);
             entity4.setOrigin("events::carousel");

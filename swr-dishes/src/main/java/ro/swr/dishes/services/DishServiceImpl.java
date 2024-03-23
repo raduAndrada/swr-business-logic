@@ -7,7 +7,7 @@ import model.*;
 import model.rest.DishFilterOptions;
 import model.rest.SearchRequest;
 import model.rest.SearchResponse;
-import org.codehaus.plexus.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
