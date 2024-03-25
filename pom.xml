@@ -10,6 +10,14 @@
         <relativePath/> <!-- lookup parent from historyRepository -->
     </parent>
 
+    <distributionManagement>
+        <repository>
+            <id>swr-swr-maven</id>
+            <name>swr-swr-maven</name>
+            <url>https://swr-959720979797.d.codeartifact.eu-central-1.amazonaws.com/maven/swr-maven/</url>
+        </repository>
+    </distributionManagement>
+
     <groupId>ro.swr</groupId>
     <artifactId>swr-bl-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
