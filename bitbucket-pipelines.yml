@@ -72,5 +72,17 @@ pipelines:
             variables:
              FILES_IGNORED: 'set_env.sh'
 
+   - step:
+      name: Deploy static-data to ECR
+      trigger: manual
+      script:
+       - mvn clean install -s settings.xml
+       - cd swr-static-data
+       - docker build -t swr-static-data:latest .
 
+       - pipe: atlassian/aws-ecr-push-image:2.3.0
+         variables:
+          AWS_DEFAULT_REGION: 'eu-central-1'
+          IMAGE_NAME: swr-static-data
+          TAGS: latest
 
