@@ -71,33 +71,32 @@ pipelines:
           - pipe: atlassian/git-secrets-scan:1.2.0
             variables:
              FILES_IGNORED: 'set_env.sh'
+      - step:
+         name: Deploy static-data to ECR
+         trigger: manual
+         script:
+          - source set_env.sh
+          - mvn clean install -s settings.xml
+          - cd swr-static-data
+          - docker build -t swr-static-data:latest .
 
-   - step:
-      name: Deploy static-data to ECR
-      trigger: manual
-      script:
-       - source set_env.sh
-       - mvn clean install -s settings.xml
-       - cd swr-static-data
-       - docker build -t swr-static-data:latest .
+          - pipe: atlassian/aws-ecr-push-image:2.3.0
+            variables:
+             AWS_DEFAULT_REGION: 'eu-central-1'
+             IMAGE_NAME: swr-static-data
+             TAGS: latest
 
-       - pipe: atlassian/aws-ecr-push-image:2.3.0
-         variables:
-          AWS_DEFAULT_REGION: 'eu-central-1'
-          IMAGE_NAME: swr-static-data
-          TAGS: latest
+      - step:
+         name: Deploy swr-menu to ECR
+         trigger: manual
+         script:
+          - source set_env.sh
+          - mvn clean install -s settings.xml
+          - cd swr-menu
+          - docker build -t swr-menu:latest .
 
-   - step:
-      name: Deploy swr-menu to ECR
-      trigger: manual
-      script:
-       - source set_env.sh
-       - mvn clean install -s settings.xml
-       - cd swr-menu
-       - docker build -t swr-menu:latest .
-
-       - pipe: atlassian/aws-ecr-push-image:2.3.0
-         variables:
-          AWS_DEFAULT_REGION: 'eu-central-1'
-          IMAGE_NAME: swr-menu
-          TAGS: latest
+          - pipe: atlassian/aws-ecr-push-image:2.3.0
+            variables:
+             AWS_DEFAULT_REGION: 'eu-central-1'
+             IMAGE_NAME: swr-menu
+             TAGS: latest
