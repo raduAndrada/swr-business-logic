@@ -53,8 +53,7 @@ pipelines:
        - printenv > set_env.sh
       artifacts:
        - set_env.sh
-   - parallel:
-      - step:
+   - step:
          name: Deploy to Artifactory
          image: maven:3.9.6
          caches:
@@ -62,7 +61,11 @@ pipelines:
          script: # Modify the commands below to build your repository.
           - source set_env.sh
           - sed -i.bak 's@passwd12@'"$CODEARTIFACT_AUTH_TOKEN"'@g' settings.xml
-          - mvn clean deploy -s settings.xml
+          - mvn clean install -s settings.xml
+         artifacts:
+          - swr-menu/target/**
+          - swr-static-data/target/**
+   - parallel:
       - step:
          name: Security Scan
          script:
@@ -75,13 +78,10 @@ pipelines:
          name: Deploy static-data to ECR
          trigger: manual
          script:
-          - source set_env.sh
-          - sed -i.bak 's@passwd12@'"$CODEARTIFACT_AUTH_TOKEN"'@g' settings.xml
           - cd swr-static-data
-          - mvn clean install -s ./settings.xml
           - docker build -t swr-static-data:latest .
 
-          - pipe: atlassian/aws-ecr-push-image:2.3.0
+          - pipe: atlassian/aws-ecr-push-image:2.4.0
             variables:
              AWS_DEFAULT_REGION: 'eu-central-1'
              IMAGE_NAME: swr-static-data
@@ -91,13 +91,10 @@ pipelines:
          name: Deploy swr-menu to ECR
          trigger: manual
          script:
-          - source set_env.sh
           - cd swr-menu
-          - mvn clean install
           - docker build -t swr-menu:latest .
 
-          - pipe: atlassian/aws-ecr-push-image:2.3.0
+          - pipe: atlassian/aws-ecr-push-image:2.4.0
             variables:
-             AWS_DEFAULT_REGION: 'eu-central-1'
              IMAGE_NAME: swr-menu
              TAGS: latest
