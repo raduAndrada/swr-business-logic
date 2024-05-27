@@ -76,6 +76,7 @@ pipelines:
       name: Deploy static-data to ECR
       trigger: manual
       script:
+       - source set_env.sh
        - mvn clean install -s settings.xml
        - cd swr-static-data
        - docker build -t swr-static-data:latest .
@@ -90,6 +91,7 @@ pipelines:
       name: Deploy swr-menu to ECR
       trigger: manual
       script:
+       - source set_env.sh
        - mvn clean install -s settings.xml
        - cd swr-menu
        - docker build -t swr-menu:latest .
