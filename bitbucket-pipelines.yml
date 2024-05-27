@@ -91,7 +91,7 @@ pipelines:
       trigger: manual
       script:
        - mvn clean install -s settings.xml
-       - cd swr-dishes
+       - cd swr-menu
        - docker build -t swr-menu:latest .
 
        - pipe: atlassian/aws-ecr-push-image:2.3.0
