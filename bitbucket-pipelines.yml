@@ -86,3 +86,16 @@ pipelines:
           IMAGE_NAME: swr-static-data
           TAGS: latest
 
+   - step:
+      name: Deploy swr-menu to ECR
+      trigger: manual
+      script:
+       - mvn clean install -s settings.xml
+       - cd swr-dishes
+       - docker build -t swr-menu:latest .
+
+       - pipe: atlassian/aws-ecr-push-image:2.3.0
+         variables:
+          AWS_DEFAULT_REGION: 'eu-central-1'
+          IMAGE_NAME: swr-menu
+          TAGS: latest

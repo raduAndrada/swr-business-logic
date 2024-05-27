@@ -29,6 +29,7 @@
     <modules>
         <module>swr-dishes</module>
         <module>swr-static-data</module>
+        <module>swr-menu</module>
     </modules>
 
     <properties>
