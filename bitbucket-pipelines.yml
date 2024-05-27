@@ -76,8 +76,9 @@ pipelines:
          trigger: manual
          script:
           - source set_env.sh
-          - mvn clean install -s settings.xml
+          - sed -i.bak 's@passwd12@'"$CODEARTIFACT_AUTH_TOKEN"'@g' settings.xml
           - cd swr-static-data
+          - mvn clean install -s ./settings.xml
           - docker build -t swr-static-data:latest .
 
           - pipe: atlassian/aws-ecr-push-image:2.3.0
@@ -91,8 +92,8 @@ pipelines:
          trigger: manual
          script:
           - source set_env.sh
-          - mvn clean install -s settings.xml
           - cd swr-menu
+          - mvn clean install
           - docker build -t swr-menu:latest .
 
           - pipe: atlassian/aws-ecr-push-image:2.3.0
