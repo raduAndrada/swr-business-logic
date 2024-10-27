@@ -20,6 +20,7 @@ public class MenuController {
 
     private final MenuParser dishService;
 
+
     @GetMapping
     public Collection<Category> getMenu() {
         return dishService.parseMenu();

@@ -66,9 +66,9 @@ public class MenuParserImpl implements MenuParser {
             quantity = name.substring(name.lastIndexOf(" "))
                     .replace(" ", "")
                     .replace("DOC", "")
-                    .replace("-","");
+                    .replace("-", "");
             name = name.substring(0, name.lastIndexOf(" "))
-                    .replace("-","");
+                    .replace("-", "");
         }
         return new MenuItem(name, dsc[0], quantity, price);
     }
